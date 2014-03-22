@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context   
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- 自动扫描bean，把作了注解的类转换为bean -->
+	<context:component-scan base-package="com.microactive.controller" />
+
+	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+
+	<!-- 对模型视图名称的解析，在请求时模型视图名称添加前后缀 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
+
+	<!-- apache.dbcp连接池的配置 -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver">
+		</property>
+		<property name="url" value="jdbc:mysql://localhost:3306/microactive"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="tanmf123456"></property>
+		<property name="maxActive" value="100"></property>
+		<property name="maxIdle" value="30"></property>
+		<property name="maxWait" value="500"></property>
+		<property name="defaultAutoCommit" value="true"></property>
+	</bean>
+	
+	<!-- jdbc注入 -->
+	<bean id="jdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	
+	<!-- personManager 定义 -->
+	<bean id="personManager" class="com.microactive.manager.impl.PersonManagerImpl">
+	</bean>
+	
+	<!-- personDao 定义 -->
+	<bean id="personDao" class="com.microactive.dao.impl.PersonDaoImpl">
+	</bean>
+	
+</beans>
